@@ -20,7 +20,7 @@ A Spring Boot proxy that translates between the **Anthropic Messages API** and t
 - 📡 **Streaming support** — Real-time SSE translation between Anthropic and OpenAI formats
 - 🛠️ **Tool use** — All 25 Claude Code tools (Bash, Read, Edit, Write, Grep, Glob, etc.)
 - 🌐 **Web dashboard** — Lists bound AI Services with one-click copy for Claude Code setup
-- 🔐 **SSO integration** — Tanzu Platform `p-identity` service binding for authentication
+- 🔐 **SSO integration** — Single Sign-On via Tanzu Platform SSO
 - 📦 **Multi-model support** — Discovers models from single-model and multi-model GenAI bindings
 - 🗄️ **Redis-backed** — Sessions and settings shared across scaled instances
 - ☁️ **CF-ready** — Deploy to Tanzu Platform with `cf push`
@@ -96,7 +96,7 @@ applications:
     buildpacks:
       - java_buildpack_offline
     services:
-      - sso              # p-identity SSO instance
+      - sso              # Tanzu SSO instance
       - my-genai-service # AI Services binding(s)
       - redis            # Redis for sessions + settings
     env:
@@ -141,7 +141,7 @@ Claude Code doesn't know the context window of custom models, so it won't automa
 
 ## 🔐 SSO
 
-When deployed to Tanzu Platform with a `p-identity` service binding:
+When deployed to Tanzu Platform with a Tanzu SSO service binding:
 
 - The web dashboard requires SSO login
 - The `/v1/messages` API uses the GenAI API key for auth (no SSO)
