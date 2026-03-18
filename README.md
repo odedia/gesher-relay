@@ -7,7 +7,7 @@
 A Spring Boot proxy that translates between the **Anthropic Messages API** and the **OpenAI Chat Completions API** in real-time, including streaming and tool use.
 
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0-6DB33F?logo=springboot&logoColor=white)
-![Java](https://img.shields.io/badge/Java-25-ED8B00?logo=openjdk&logoColor=white)
+
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue)
 
 > ⚠️ **Community Project** — This is not an official product of, nor affiliated with or endorsed by, Anthropic, OpenAI, or Broadcom. All trademarks belong to their respective owners.
@@ -125,6 +125,8 @@ cf push
 2. The dashboard shows all bound AI models with capabilities
 3. Click **Copy** on any model
 4. Paste into your terminal — Claude Code connects through the bridge
+
+![Java](https://img.shields.io/badge/Java-25-ED8B00?logo=openjdk&logoColor=white)
 
 ## 🧠 Context Window Requirements
 
