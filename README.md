@@ -10,7 +10,7 @@ A Spring Boot proxy that translates between the **Anthropic Messages API** and t
 ![Java](https://img.shields.io/badge/Java-25-ED8B00?logo=openjdk&logoColor=white)
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue)
 
-> ⚠️ **Community Project** — This is not an official product of Anthropic or Broadcom.
+> ⚠️ **Community Project** — This is not an official product of, nor affiliated with or endorsed by, Anthropic, OpenAI, or Broadcom. All trademarks belong to their respective owners.
 
 ---
 
@@ -183,7 +183,7 @@ Scale freely with `cf scale gesher-relay -i 3`.
 
 ## 🤝 Contributing
 
-Issues and PRs welcome! This is a community project.
+This is a community project. Issues and pull requests are welcome!
 
 ## 📄 License
 
