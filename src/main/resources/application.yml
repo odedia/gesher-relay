@@ -1,0 +1,29 @@
+server:
+  port: ${PORT:8082}
+  forward-headers-strategy: FRAMEWORK
+  reactive:
+    session:
+      cookie:
+        name: JSESSIONID
+
+spring:
+  session:
+    store-type: redis
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+
+bridge:
+  target:
+    base-url: ${TARGET_API_BASE:https://genai-proxy.sys.tas-ndc.kuhn-labs.com/tanzu-qwen3-coder-v1025-1a8fd7b/openai}
+    api-key: ${TARGET_API_KEY:}
+    model: ${TARGET_MODEL:Qwen/Qwen3-Coder-30B-A3B-Instruct-FP8}
+    max-tokens: ${TARGET_MAX_TOKENS:0}
+  sso:
+    enabled: ${SSO_ENABLED:false}
+
+logging:
+  level:
+    com.anthropic.bridge: DEBUG

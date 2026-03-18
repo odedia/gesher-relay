@@ -1,0 +1,15 @@
+---
+applications:
+  - name: gesher-relay
+    memory: 768M
+    instances: 1
+    path: target/gesher-relay-0.1.0-SNAPSHOT.jar
+    buildpacks:
+      - java_buildpack_offline
+    services:
+      - sso
+      - coder
+      - gpt-oss-1025
+      - redis
+    env:
+      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 25.+ } }'

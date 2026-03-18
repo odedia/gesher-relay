@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gesher Relay — Dashboard</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#08090c;color:#d1d5db;min-height:100vh;padding:2rem}
+        .wrap{max-width:960px;margin:0 auto}
+        .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem}
+        h1{font-size:1.5rem;font-weight:700;color:#fff}
+        h1 span{background:linear-gradient(135deg,#cc785c,#e8a87c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .user-bar{display:flex;align-items:center;gap:1rem;font-size:0.82rem;color:#6b7280}
+        .user-bar a{color:#cc785c;text-decoration:none;font-weight:500}
+        .user-bar a:hover{color:#e8a87c}
+        .subtitle{color:#6b7280;font-size:0.9rem;margin-bottom:2rem}
+
+        .howto{background:#111318;border:1px solid #1e2130;border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;font-size:0.85rem;line-height:1.7;color:#9ca3af}
+        .howto strong{color:#d1d5db;font-weight:600}
+        .howto ol{margin:0.5rem 0 0 1.2rem}
+        .howto code{background:#1a1d27;padding:0.15rem 0.45rem;border-radius:4px;font-size:0.8rem;color:#e8a87c}
+
+        .reqs{background:#111318;border:1px solid #1e2130;border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:2rem;font-size:0.82rem;line-height:1.7;color:#9ca3af}
+        .reqs strong{color:#d1d5db;font-weight:600}
+        .reqs-title{font-size:0.85rem;font-weight:600;color:#d1d5db;margin-bottom:0.5rem}
+        .reqs table{width:100%;border-collapse:collapse;margin-top:0.5rem}
+        .reqs th{text-align:left;color:#6b7280;font-weight:500;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.04em;padding:0.3rem 0.75rem 0.3rem 0}
+        .reqs td{padding:0.3rem 0.75rem 0.3rem 0;font-size:0.82rem}
+        .reqs .rec{color:#6fcf97}
+        .reqs .min{color:#f2c94c}
+        .reqs .ideal{color:#56ccf2}
+
+        .cards{display:grid;gap:1rem}
+        .card{background:#111318;border:1px solid #1e2130;border-radius:14px;padding:1.5rem;transition:border-color 0.2s}
+        .card:hover{border-color:#2d3148}
+        .card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.6rem;gap:1rem}
+        .model-name{font-size:1.05rem;font-weight:600;color:#fff;word-break:break-all}
+        .service-badge{font-size:0.7rem;color:#6b7280;background:#1a1d27;padding:0.2rem 0.6rem;border-radius:6px;white-space:nowrap;flex-shrink:0}
+        .meta{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem;align-items:center}
+        .tag{padding:0.2rem 0.55rem;border-radius:6px;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.04em;font-weight:500;border:1px solid}
+        .tag.chat{color:#6fcf97;border-color:#2d5a3d;background:rgba(111,207,151,0.06)}
+        .tag.tools{color:#f2c94c;border-color:#5a4a2d;background:rgba(242,201,76,0.06)}
+        .tag.embedding{color:#56ccf2;border-color:#2d4a5a;background:rgba(86,204,242,0.06)}
+        .tag.wire{color:#a78bfa;border-color:#3b2d6b;background:rgba(167,139,250,0.06)}
+
+        .snippet-box{position:relative}
+        .snippet{background:#0c0d12;border:1px solid #1a1d27;border-radius:10px;padding:1rem 3.5rem 1rem 1rem;font-family:'SF Mono','Fira Code','Cascadia Code',monospace;font-size:0.78rem;line-height:1.7;color:#a5b4cb;white-space:pre-wrap;word-break:break-all;overflow-x:auto}
+        .copy-btn{position:absolute;top:0.6rem;right:0.6rem;background:#cc785c;color:#fff;border:none;padding:0.45rem 1rem;border-radius:8px;font-size:0.78rem;font-weight:600;cursor:pointer;transition:all 0.15s;box-shadow:0 2px 8px rgba(204,120,92,0.2)}
+        .copy-btn:hover{background:#e88a68;box-shadow:0 4px 16px rgba(204,120,92,0.3)}
+        .copy-btn.ok{background:#2d5a3d;box-shadow:none}
+        .hidden-copy{position:absolute;left:-9999px;opacity:0;height:0;width:0}
+
+        .empty{text-align:center;padding:4rem 2rem;color:#4b5563}
+        .empty p{margin-bottom:0.5rem}
+        .empty code{background:#111318;padding:0.2rem 0.5rem;border-radius:4px;font-size:0.82rem;color:#9ca3af}
+
+        .community{margin-top:2rem;padding:0.6rem 1rem;background:rgba(251,191,36,0.05);border:1px solid rgba(251,191,36,0.1);border-radius:8px;font-size:0.75rem;color:#b45309;text-align:center}
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="topbar">
+        <h1>Gesher <span>Relay</span></h1>
+        <div class="user-bar">
+            <span id="userName"></span>
+            <a href="#" onclick="document.getElementById('logoutForm').submit();return false">Sign out</a>
+            <form id="logoutForm" method="POST" action="/logout" style="display:none"></form>
+        </div>
+    </div>
+    <p class="subtitle">Bridges the Anthropic and OpenAI APIs, enabling Claude Code to work with any OpenAI-compatible model. Runs on Tanzu Platform.</p>
+
+    <div class="howto">
+        <strong>How to connect Claude Code:</strong>
+        <ol>
+            <li>Click <strong>Copy</strong> on any model below</li>
+            <li>Paste the commands into your terminal</li>
+            <li>Claude Code will connect through the bridge to the selected model</li>
+        </ol>
+        Requires <code>claude</code> CLI installed. Install at <strong>claude.ai/claude-code</strong>.
+    </div>
+
+    <div class="reqs">
+        <div class="reqs-title">Model context window requirements</div>
+        Claude Code sends a large system prompt (~7K tokens) plus 25 tool definitions (~20K tokens).
+        The model must have enough context to fit this overhead plus your conversation.
+        <table>
+            <tr><th>Context</th><th>Suitability</th></tr>
+            <tr><td class="min"><strong>32K tokens</strong></td><td>Minimum — short conversations only</td></tr>
+            <tr><td class="rec"><strong>64K tokens</strong></td><td>Recommended — comfortable for coding sessions</td></tr>
+            <tr><td class="ideal"><strong>128K+ tokens</strong></td><td>Ideal — extended sessions without hitting limits</td></tr>
+        </table>
+        If a model returns 500 errors, ask your platform operator to increase the context window limit in <strong>Tanzu Ops Manager</strong>.
+    </div>
+
+    <div class="reqs">
+        <div class="reqs-title">Managing context with custom models</div>
+        Claude Code doesn't know the context window of custom models — it only tracks built-in Claude models.
+        This means it won't automatically compact the conversation when your model's limit is approaching.
+        You need to manage context manually:
+        <table>
+            <tr><th>Command</th><th>When to use</th></tr>
+            <tr><td><code>/compact</code></td><td>Summarizes the conversation to free up context. Use when responses slow down or the model starts returning errors mid-session. You can add a focus area: <code>/compact focus on the API changes</code></td></tr>
+            <tr><td><code>/clear</code></td><td>Resets the conversation entirely. Use when switching tasks or starting fresh work.</td></tr>
+            <tr><td><code>/context</code></td><td>Shows what's using space in your context window. Useful to check before compacting.</td></tr>
+        </table>
+    </div>
+
+    <div class="cards" id="cards"><div class="empty">Loading...</div></div>
+
+    <div class="community">
+        This is a community project and is not an official product of Anthropic or Broadcom.
+    </div>
+</div>
+
+<script>
+fetch('/api/auth-status').then(r=>r.json()).then(s=>{
+    document.getElementById('userName').textContent=s.user||'';
+    if(!s.ssoEnabled)document.querySelector('.user-bar').style.display='none';
+}).catch(()=>{});
+
+fetch('/api/bindings').then(r=>{if(!r.ok)throw r;return r.json()}).then(bindings=>{
+    const el=document.getElementById('cards');
+    if(!bindings.length){
+        el.innerHTML='<div class="empty"><p>No GenAI service bindings found.</p><code>cf bind-service gesher-relay &lt;your-genai-service&gt;</code><p style="margin-top:0.5rem">Then restage the app.</p></div>';
+        return;
+    }
+    el.innerHTML=bindings.map((b,i)=>{
+        return `<div class="card">
+            <div class="card-top">
+                <div class="model-name">${esc(b.modelName)}</div>
+                <div class="service-badge">${esc(b.serviceName)}</div>
+            </div>
+            <div class="meta">
+                ${b.capabilities.map(c=>`<span class="tag ${c}">${c}</span>`).join('')}
+                <span class="tag wire">${esc(b.wireFormat)}</span>
+            </div>
+            <div class="snippet-box">
+                <pre class="snippet">${esc(maskSnippet(b.copySnippet))}</pre>
+                <textarea class="hidden-copy" id="s${i}">${esc(b.copySnippet)}</textarea>
+                <button class="copy-btn" onclick="cp(${i},this)">Copy</button>
+            </div>
+        </div>`;
+    }).join('');
+}).catch(()=>{
+    document.getElementById('cards').innerHTML='<div class="empty">Failed to load bindings.</div>';
+});
+
+function maskSnippet(s){
+    return s.replace(/(export ANTHROPIC_API_KEY=)(.+)/g,(m,prefix,key)=>{
+        return prefix+key.substring(0,10)+'********************************';
+    });
+}
+function cp(i,btn){
+    navigator.clipboard.writeText(document.getElementById('s'+i).value).then(()=>{
+        btn.textContent='Copied!';btn.classList.add('ok');
+        setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('ok')},2000);
+    });
+}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+</script>
+</body>
+</html>
