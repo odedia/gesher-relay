@@ -14,6 +14,16 @@ A Spring Boot proxy that translates between the **Anthropic Messages API** and t
 
 ---
 
+<p align="center">
+  <img src="docs/images/splash.webp" alt="Gesher Relay — Splash Screen" width="500">
+</p>
+
+<p align="center">
+  <img src="docs/images/dashboard.webp" alt="Gesher Relay — Dashboard" width="700">
+</p>
+
+---
+
 ## ✨ Features
 
 - 🔄 **Full API translation** — Messages, system prompts, tool definitions, tool results
