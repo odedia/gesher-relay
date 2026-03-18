@@ -56,7 +56,24 @@ export ANTHROPIC_MODEL=my-model
 claude
 ```
 
-The bridge listens on port `8082` by default. Change with the `PORT` env var.
+### Environment Variables (Local)
+
+#### Bridge
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `TARGET_API_BASE` | — | Base URL of the OpenAI-compatible endpoint |
+| `TARGET_API_KEY` | — | API key for the target endpoint |
+| `TARGET_MODEL` | — | Model name to use on the target endpoint |
+| `PORT` | `8082` | Port the bridge listens on |
+
+#### Claude Code
+
+| Variable | Value | Description |
+|----------|-------|-------------|
+| `ANTHROPIC_BASE_URL` | `http://localhost:8082` | Points Claude Code at the bridge |
+| `ANTHROPIC_API_KEY` | Any value | Auth token (not validated locally) |
+| `ANTHROPIC_MODEL` | e.g. `my-model` | Model name shown in Claude Code |
 
 ## ☁️ Deploy to Tanzu Platform
 
@@ -109,7 +126,7 @@ Claude Code sends a large system prompt (~7K tokens) plus 25 tool definitions (~
 | **64K tokens** | ✅ Recommended — comfortable for coding sessions |
 | **128K+ tokens** | 🚀 Ideal — extended sessions without hitting limits |
 
-If a model returns 500 errors, ask your platform operator to increase `--max-model-len` in the vLLM configuration.
+If a model returns 500 errors, ask your platform operator to increase the max context window in **Tanzu Ops Manager**.
 
 ### Managing context manually
 
@@ -121,26 +138,6 @@ Claude Code doesn't know the context window of custom models, so it won't automa
 | `/clear` | Resets the conversation. Use when switching tasks. |
 | `/context` | Shows what's using space in your context window. |
 
-## ⚙️ Configuration
-
-### Environment Variables
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `TARGET_API_BASE` | — | Base URL of the OpenAI-compatible endpoint |
-| `TARGET_API_KEY` | — | API key for the target endpoint |
-| `TARGET_MODEL` | — | Model name to use on the target endpoint |
-| `PORT` | `8082` | Port the bridge listens on |
-
-On Tanzu Platform, these are auto-configured from `VCAP_SERVICES` bindings. The env vars are only needed for local development.
-
-### Claude Code Environment Variables
-
-| Variable | Value | Description |
-|----------|-------|-------------|
-| `ANTHROPIC_BASE_URL` | `http://localhost:8082` (local) or `https://your-bridge-url` (CF) | Points Claude Code at the bridge |
-| `ANTHROPIC_API_KEY` | Any value (local) or the GenAI API key (CF) | Auth token |
-| `ANTHROPIC_MODEL` | e.g. `gpt-oss-20b` | Model name shown in Claude Code |
 
 ## 🔐 SSO
 
@@ -165,6 +162,7 @@ Scale freely with `cf scale gesher-relay -i 3`.
 ## 🏗️ Tech Stack
 
 - **Spring Boot 4.0** with WebFlux (reactive)
+- **Spring AI 2.0** for AI Services integration
 - **Spring Security** with OAuth2 (SSO)
 - **Spring Session** with Redis
 - **Reactor Netty** for async HTTP
